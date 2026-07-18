@@ -340,11 +340,11 @@ const EIXOS = [
 ];
 
 const STATUS_OPTIONS = [
-  { value: "nao-iniciado",  label: "Não Iniciado",   cor: "#6B7280", bg: "#F3F4F6" },
-  { value: "em-andamento",  label: "Em Andamento",   cor: "#3B82F6", bg: "#DBEAFE" },
-  { value: "concluido",     label: "Concluído",      cor: "#16A34A", bg: "#DCFCE7" },
-  { value: "despriorizado", label: "Despriorizado",  cor: "#B45309", bg: "#FEF3C7" },
-  { value: "inviabilizado", label: "Inviabilizado",  cor: "#DC2626", bg: "#FEE2E2" },
+  { value: "nao-iniciado", label: "Não Iniciado", cor: "#6B7280", bg: "#F3F4F6" },
+  { value: "em-andamento", label: "Em Andamento", cor: "#3B82F6", bg: "#DBEAFE" },
+  { value: "concluido", label: "Concluído", cor: "#16A34A", bg: "#DCFCE7" },
+  { value: "despriorizado", label: "Despriorizado", cor: "#B45309", bg: "#FEF3C7" },
+  { value: "inviabilizado", label: "Inviabilizado", cor: "#DC2626", bg: "#FEE2E2" },
 ];
 
 function getStatusConfig(value) {
@@ -908,19 +908,19 @@ function SummaryBar({ state, eixos }) {
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-const MESES = { jan:1,fev:2,mar:3,abr:4,mai:5,jun:6,jul:7,ago:8,set:9,out:10,nov:11,dez:12 };
+const MESES = { jan: 1, fev: 2, mar: 3, abr: 4, mai: 5, jun: 6, jul: 7, ago: 8, set: 9, out: 10, nov: 11, dez: 12 };
 function parsePrazo(p) {
   if (!p || p === "OK") return null;
   const m = p.toLowerCase().match(/^([a-zç]+)\/(\d{2})$/);
   if (!m) return null;
-  const mes = MESES[m[1].substring(0,3)];
+  const mes = MESES[m[1].substring(0, 3)];
   if (!mes) return null;
   return { mes, ano: 2000 + parseInt(m[2]) };
 }
 
 const EIXO_COLOR_MAP = Object.fromEntries(EIXOS.map(e => [e.id, e.cor]));
-const ANOS = ["2025","2026","2027","2028","2029","2030"];
-const MESES_NOMES = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+const ANOS = ["2025", "2026", "2027", "2028", "2029", "2030"];
+const MESES_NOMES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
 
 // ── Main App ──────────────────────────────────────────────────────────────────
 
@@ -939,80 +939,120 @@ const METAS_CHAVE = [
 // MC_STATUS removed - metas-chave now use auto-classification
 
 const INDICADORES_DIRETRIZ = [
-  { eixoId: "aprendizagem", diretrizNome: "Frequência e Permanência", indicadores: [
-    { id: "ind_freq1", nome: "% Frequência nas UEs", metas: { 2025: 90, 2026: 92, 2027: 95, 2028: 95 } },
-  ]},
-  { eixoId: "aprendizagem", diretrizNome: "Inclusão e Equidade", indicadores: [
-    { id: "ind_inc1", nome: "% crianças e estudantes com prof. de apoio atendidas", metas: { 2025: 100, 2026: 100, 2027: 100, 2028: 100 } },
-    { id: "ind_inc2", nome: "Redução da diferença de aprendizagem entre grupos de equidade", metas: { 2025: null, 2026: null, 2027: 25, 2028: 50 } },
-  ]},
-  { eixoId: "aprendizagem", diretrizNome: "Gestão Pedagógica", indicadores: [
-    { id: "ind_gp1", nome: "% UEs com Plano de Ação e metas definidas e acompanhadas", metas: { 2025: 30, 2026: 100, 2027: 100, 2028: 100 } },
-  ]},
-  { eixoId: "aprendizagem", diretrizNome: "Currículo", indicadores: [
-    { id: "ind_cur1", nome: "% UEs utilizando currículo revisado do EF", metas: { 2025: null, 2026: null, 2027: 90, 2028: 100 } },
-  ]},
-  { eixoId: "aprendizagem", diretrizNome: "Material Pedagógico", indicadores: [
-    { id: "ind_mp1", nome: "% turmas de EF utilizando material pedagógico alinhado à BNCC", metas: { 2025: 45, 2026: 60, 2027: 100, 2028: 100 } },
-  ]},
-  { eixoId: "aprendizagem", diretrizNome: "Avaliação", indicadores: [
-    { id: "ind_av1", nome: "% participação dos estudantes no Avalia Floripa", metas: { 2025: 85, 2026: 85, 2027: 85, 2028: 85 } },
-    { id: "ind_av2", nome: "% UEs de Ed. Infantil participando da avaliação de qualidade", metas: { 2025: null, 2026: 30, 2027: 60, 2028: 100 } },
-  ]},
-  { eixoId: "aprendizagem", diretrizNome: "Superação de Defasagens", indicadores: [
-    { id: "ind_sd1", nome: "% redução de estudantes AI e AF com aprendizagem insuficiente", metas: { 2025: 30, 2026: 30, 2027: 30, 2028: 30 } },
-  ]},
-  { eixoId: "professores", diretrizNome: "Gestão do Trabalho Docente", indicadores: [
-    { id: "ind_gtd1", nome: "% UEs com nº de profissionais aderente aos normativos", metas: { 2025: null, 2026: 100, 2027: 100, 2028: 100 } },
-  ]},
-  { eixoId: "professores", diretrizNome: "Formação Profissional", indicadores: [
-    { id: "ind_fp1", nome: "% participação nas trilhas formativas", metas: { 2025: 90, 2026: 90, 2027: 90, 2028: 90 } },
-    { id: "ind_fp2", nome: "% anos/grupos com trilhas formativas desenhadas", metas: { 2025: 30, 2026: 60, 2027: 80, 2028: 100 } },
-  ]},
-  { eixoId: "unidades-educativas", diretrizNome: "Gestão Escolar", indicadores: [
-    { id: "ind_ge1", nome: "% participação nas trilhas formativas para gestores", metas: { 2025: 90, 2026: 90, 2027: 90, 2028: 90 } },
-  ]},
-  { eixoId: "unidades-educativas", diretrizNome: "Ensino Integral", indicadores: [
-    { id: "ind_ei1", nome: "% turmas dos Anos Iniciais em tempo integral", metas: { 2025: 25, 2026: 35, 2027: 45, 2028: 50 } },
-  ]},
-  { eixoId: "unidades-educativas", diretrizNome: "Infraestrutura", indicadores: [
-    { id: "ind_inf1", nome: "% execução das obras previstas para o ano", metas: { 2025: 80, 2026: 80, 2027: 80, 2028: 80 } },
-  ]},
-  { eixoId: "unidades-educativas", diretrizNome: "Ambiente Acolhedor e Família Presente", indicadores: [
-    { id: "ind_aa1", nome: "% UEs com Grêmio Estudantil ativo", metas: { 2025: 60, 2026: 70, 2027: 75, 2028: 80 } },
-    { id: "ind_aa2", nome: "% profissionais participando de formações do protocolo Escuta Especializada", metas: { 2025: 5, 2026: 6, 2027: 8, 2028: 10 } },
-  ]},
-  { eixoId: "secretaria", diretrizNome: "Apoio às Escolas", indicadores: [
-    { id: "ind_ae1", nome: "% UEs visitadas regularmente por tutores/assessores pedagógicos", metas: { 2025: 100, 2026: 100, 2027: 100, 2028: 100 } },
-  ]},
-  { eixoId: "secretaria", diretrizNome: "Governança e Implementação", indicadores: [
-    { id: "ind_gov1", nome: "% marcos de entregas acompanhados e entregues dentro do prazo", metas: { 2025: 100, 2026: 100, 2027: 100, 2028: 100 } },
-  ]},
-  { eixoId: "secretaria", diretrizNome: "Visão de Rede", indicadores: [
-    { id: "ind_vr1", nome: "% gestores escolares participando dos encontros bimestrais", metas: { 2025: null, 2026: 80, 2027: 80, 2028: 80 } },
-  ]},
-  { eixoId: "secretaria", diretrizNome: "Equipe Qualificada", indicadores: [
-    { id: "ind_eq1", nome: "% participação das equipes nas formações continuadas", metas: { 2025: null, 2026: 90, 2027: 90, 2028: 90 } },
-  ]},
-  { eixoId: "secretaria", diretrizNome: "Eficiência de Gestão", indicadores: [
-    { id: "ind_eg1", nome: "% diretorias com mapeamento de processos realizados e implementados", metas: { 2025: 100, 2026: 100, 2027: 100, 2028: 100 } },
-  ]},
-  { eixoId: "secretaria", diretrizNome: "Colaboração entre Entes Federados", indicadores: [
-    { id: "ind_cef1", nome: "% turmas de Anos Iniciais municipalizadas", metas: { 2025: null, 2026: 20, 2027: 40, 2028: 60 } },
-    { id: "ind_cef2", nome: "% turmas de Anos Finais estadualizadas", metas: { 2025: null, 2026: 25, 2027: 50, 2028: 75 } },
-  ]},
-  { eixoId: "tecnologia", diretrizNome: "Tecnologia", indicadores: [
-    { id: "ind_tec1", nome: "% UEs com infraestrutura tecnológica adequada", metas: { 2025: null, 2026: 70, 2027: 100, 2028: 100 } },
-    { id: "ind_tec2", nome: "% UEs com recursos digitais aplicados em práticas pedagógicas", metas: { 2025: null, 2026: 40, 2027: 80, 2028: 100 } },
-  ]},
+  {
+    eixoId: "aprendizagem", diretrizNome: "Frequência e Permanência", indicadores: [
+      { id: "ind_freq1", nome: "% Frequência nas UEs", metas: { 2025: 90, 2026: 92, 2027: 95, 2028: 95 } },
+    ]
+  },
+  {
+    eixoId: "aprendizagem", diretrizNome: "Inclusão e Equidade", indicadores: [
+      { id: "ind_inc1", nome: "% crianças e estudantes com prof. de apoio atendidas", metas: { 2025: 100, 2026: 100, 2027: 100, 2028: 100 } },
+      { id: "ind_inc2", nome: "Redução da diferença de aprendizagem entre grupos de equidade", metas: { 2025: null, 2026: null, 2027: 25, 2028: 50 } },
+    ]
+  },
+  {
+    eixoId: "aprendizagem", diretrizNome: "Gestão Pedagógica", indicadores: [
+      { id: "ind_gp1", nome: "% UEs com Plano de Ação e metas definidas e acompanhadas", metas: { 2025: 30, 2026: 100, 2027: 100, 2028: 100 } },
+    ]
+  },
+  {
+    eixoId: "aprendizagem", diretrizNome: "Currículo", indicadores: [
+      { id: "ind_cur1", nome: "% UEs utilizando currículo revisado do EF", metas: { 2025: null, 2026: null, 2027: 90, 2028: 100 } },
+    ]
+  },
+  {
+    eixoId: "aprendizagem", diretrizNome: "Material Pedagógico", indicadores: [
+      { id: "ind_mp1", nome: "% turmas de EF utilizando material pedagógico alinhado à BNCC", metas: { 2025: 45, 2026: 60, 2027: 100, 2028: 100 } },
+    ]
+  },
+  {
+    eixoId: "aprendizagem", diretrizNome: "Avaliação", indicadores: [
+      { id: "ind_av1", nome: "% participação dos estudantes no Avalia Floripa", metas: { 2025: 85, 2026: 85, 2027: 85, 2028: 85 } },
+      { id: "ind_av2", nome: "% UEs de Ed. Infantil participando da avaliação de qualidade", metas: { 2025: null, 2026: 30, 2027: 60, 2028: 100 } },
+    ]
+  },
+  {
+    eixoId: "aprendizagem", diretrizNome: "Superação de Defasagens", indicadores: [
+      { id: "ind_sd1", nome: "% redução de estudantes AI e AF com aprendizagem insuficiente", metas: { 2025: 30, 2026: 30, 2027: 30, 2028: 30 } },
+    ]
+  },
+  {
+    eixoId: "professores", diretrizNome: "Gestão do Trabalho Docente", indicadores: [
+      { id: "ind_gtd1", nome: "% UEs com nº de profissionais aderente aos normativos", metas: { 2025: null, 2026: 100, 2027: 100, 2028: 100 } },
+    ]
+  },
+  {
+    eixoId: "professores", diretrizNome: "Formação Profissional", indicadores: [
+      { id: "ind_fp1", nome: "% participação nas trilhas formativas", metas: { 2025: 90, 2026: 90, 2027: 90, 2028: 90 } },
+      { id: "ind_fp2", nome: "% anos/grupos com trilhas formativas desenhadas", metas: { 2025: 30, 2026: 60, 2027: 80, 2028: 100 } },
+    ]
+  },
+  {
+    eixoId: "unidades-educativas", diretrizNome: "Gestão Escolar", indicadores: [
+      { id: "ind_ge1", nome: "% participação nas trilhas formativas para gestores", metas: { 2025: 90, 2026: 90, 2027: 90, 2028: 90 } },
+    ]
+  },
+  {
+    eixoId: "unidades-educativas", diretrizNome: "Ensino Integral", indicadores: [
+      { id: "ind_ei1", nome: "% turmas dos Anos Iniciais em tempo integral", metas: { 2025: 25, 2026: 35, 2027: 45, 2028: 50 } },
+    ]
+  },
+  {
+    eixoId: "unidades-educativas", diretrizNome: "Infraestrutura", indicadores: [
+      { id: "ind_inf1", nome: "% execução das obras previstas para o ano", metas: { 2025: 80, 2026: 80, 2027: 80, 2028: 80 } },
+    ]
+  },
+  {
+    eixoId: "unidades-educativas", diretrizNome: "Ambiente Acolhedor e Família Presente", indicadores: [
+      { id: "ind_aa1", nome: "% UEs com Grêmio Estudantil ativo", metas: { 2025: 60, 2026: 70, 2027: 75, 2028: 80 } },
+      { id: "ind_aa2", nome: "% profissionais participando de formações do protocolo Escuta Especializada", metas: { 2025: 5, 2026: 6, 2027: 8, 2028: 10 } },
+    ]
+  },
+  {
+    eixoId: "secretaria", diretrizNome: "Apoio às Escolas", indicadores: [
+      { id: "ind_ae1", nome: "% UEs visitadas regularmente por tutores/assessores pedagógicos", metas: { 2025: 100, 2026: 100, 2027: 100, 2028: 100 } },
+    ]
+  },
+  {
+    eixoId: "secretaria", diretrizNome: "Governança e Implementação", indicadores: [
+      { id: "ind_gov1", nome: "% marcos de entregas acompanhados e entregues dentro do prazo", metas: { 2025: 100, 2026: 100, 2027: 100, 2028: 100 } },
+    ]
+  },
+  {
+    eixoId: "secretaria", diretrizNome: "Visão de Rede", indicadores: [
+      { id: "ind_vr1", nome: "% gestores escolares participando dos encontros bimestrais", metas: { 2025: null, 2026: 80, 2027: 80, 2028: 80 } },
+    ]
+  },
+  {
+    eixoId: "secretaria", diretrizNome: "Equipe Qualificada", indicadores: [
+      { id: "ind_eq1", nome: "% participação das equipes nas formações continuadas", metas: { 2025: null, 2026: 90, 2027: 90, 2028: 90 } },
+    ]
+  },
+  {
+    eixoId: "secretaria", diretrizNome: "Eficiência de Gestão", indicadores: [
+      { id: "ind_eg1", nome: "% diretorias com mapeamento de processos realizados e implementados", metas: { 2025: 100, 2026: 100, 2027: 100, 2028: 100 } },
+    ]
+  },
+  {
+    eixoId: "secretaria", diretrizNome: "Colaboração entre Entes Federados", indicadores: [
+      { id: "ind_cef1", nome: "% turmas de Anos Iniciais municipalizadas", metas: { 2025: null, 2026: 20, 2027: 40, 2028: 60 } },
+      { id: "ind_cef2", nome: "% turmas de Anos Finais estadualizadas", metas: { 2025: null, 2026: 25, 2027: 50, 2028: 75 } },
+    ]
+  },
+  {
+    eixoId: "tecnologia", diretrizNome: "Tecnologia", indicadores: [
+      { id: "ind_tec1", nome: "% UEs com infraestrutura tecnológica adequada", metas: { 2025: null, 2026: 70, 2027: 100, 2028: 100 } },
+      { id: "ind_tec2", nome: "% UEs com recursos digitais aplicados em práticas pedagógicas", metas: { 2025: null, 2026: 40, 2027: 80, 2028: 100 } },
+    ]
+  },
 ];
 
 // Indicadores storage handled by Supabase functions above
 
 function classifyAtingimento(pct) {
   if (pct >= 100) return { label: "Atingido com sucesso", cor: "#16A34A", bg: "#DCFCE7" };
-  if (pct >= 90)  return { label: "Atingido", cor: "#2563EB", bg: "#DBEAFE" };
-  if (pct >= 75)  return { label: "Parcialmente atingido", cor: "#D97706", bg: "#FEF3C7" };
+  if (pct >= 90) return { label: "Atingido", cor: "#2563EB", bg: "#DBEAFE" };
+  if (pct >= 75) return { label: "Parcialmente atingido", cor: "#D97706", bg: "#FEF3C7" };
   return { label: "Não atingido", cor: "#DC2626", bg: "#FEE2E2" };
 }
 
@@ -1555,63 +1595,63 @@ function MonitoramentoTab({ eixosData, marcoState, indState }) {
         const filtAtrasados = filAlertArea ? alertas.atrasados.filter(m => m.areasResolvidas.includes(filAlertArea)) : alertas.atrasados;
         return (
           <>
-      {filtCriticos.length > 0 && (
-        <div style={{ background: "white", border: "1px solid #FECACA", borderRadius: 10, overflow: "hidden", marginBottom: 16 }}>
-          <div style={{ padding: "12px 18px", background: "#FEF2F2", borderBottom: "1px solid #FECACA", display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 16 }}>🔴</span>
-            <span style={{ fontSize: 14, fontWeight: 800, color: "#DC2626" }}>Criticamente Atrasados</span>
-            <span style={{ fontSize: 12, color: "#B91C1C" }}>— Prazo expirado e Não Iniciado ({filtCriticos.length})</span>
-          </div>
-          <div>
-            {filtCriticos.map((m, i) => (
-              <div key={m.id} style={{ display: "grid", gridTemplateColumns: "1fr 140px 90px 90px", padding: "10px 18px", borderBottom: i < filtCriticos.length - 1 ? "1px solid #f5f5f5" : "none", alignItems: "center" }}>
+            {filtCriticos.length > 0 && (
+              <div style={{ background: "white", border: "1px solid #FECACA", borderRadius: 10, overflow: "hidden", marginBottom: 16 }}>
+                <div style={{ padding: "12px 18px", background: "#FEF2F2", borderBottom: "1px solid #FECACA", display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 16 }}>🔴</span>
+                  <span style={{ fontSize: 14, fontWeight: 800, color: "#DC2626" }}>Criticamente Atrasados</span>
+                  <span style={{ fontSize: 12, color: "#B91C1C" }}>— Prazo expirado e Não Iniciado ({filtCriticos.length})</span>
+                </div>
                 <div>
-                  <div style={{ fontSize: 12.5, color: "#222" }}>{m.descricao}</div>
-                  <div style={{ fontSize: 11, color: "#888", marginTop: 2 }}>{m.eixoNome} → {m.diretrizNome}</div>
+                  {filtCriticos.map((m, i) => (
+                    <div key={m.id} style={{ display: "grid", gridTemplateColumns: "1fr 140px 90px 90px", padding: "10px 18px", borderBottom: i < filtCriticos.length - 1 ? "1px solid #f5f5f5" : "none", alignItems: "center" }}>
+                      <div>
+                        <div style={{ fontSize: 12.5, color: "#222" }}>{m.descricao}</div>
+                        <div style={{ fontSize: 11, color: "#888", marginTop: 2 }}>{m.eixoNome} → {m.diretrizNome}</div>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
+                        {m.areasResolvidas.map(a => <span key={a} style={{ fontSize: 10, background: "#f0f4ff", color: "#1F3D7A", padding: "1px 6px", borderRadius: 4, fontWeight: 600 }}>{a}</span>)}
+                      </div>
+                      <div style={{ fontSize: 12, color: "#888" }}>{m.prazoEfetivo}</div>
+                      <div><span style={{ fontSize: 11, fontWeight: 700, color: "#DC2626", background: "#FEE2E2", padding: "2px 8px", borderRadius: 99 }}>{m.mesesAtraso} {m.mesesAtraso === 1 ? "mês" : "meses"}</span></div>
+                    </div>
+                  ))}
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
-                  {m.areasResolvidas.map(a => <span key={a} style={{ fontSize: 10, background: "#f0f4ff", color: "#1F3D7A", padding: "1px 6px", borderRadius: 4, fontWeight: 600 }}>{a}</span>)}
-                </div>
-                <div style={{ fontSize: 12, color: "#888" }}>{m.prazoEfetivo}</div>
-                <div><span style={{ fontSize: 11, fontWeight: 700, color: "#DC2626", background: "#FEE2E2", padding: "2px 8px", borderRadius: 99 }}>{m.mesesAtraso} {m.mesesAtraso === 1 ? "mês" : "meses"}</span></div>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
+            )}
 
-      {filtAtrasados.length > 0 && (
-        <div style={{ background: "white", border: "1px solid #FDE68A", borderRadius: 10, overflow: "hidden", marginBottom: 16 }}>
-          <div style={{ padding: "12px 18px", background: "#FFFBEB", borderBottom: "1px solid #FDE68A", display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 16 }}>🟡</span>
-            <span style={{ fontSize: 14, fontWeight: 800, color: "#B45309" }}>Atrasados</span>
-            <span style={{ fontSize: 12, color: "#92400E" }}>— Prazo expirado e Em Andamento ({filtAtrasados.length})</span>
-          </div>
-          <div>
-            {filtAtrasados.map((m, i) => (
-              <div key={m.id} style={{ display: "grid", gridTemplateColumns: "1fr 140px 90px 90px", padding: "10px 18px", borderBottom: i < filtAtrasados.length - 1 ? "1px solid #f5f5f5" : "none", alignItems: "center" }}>
+            {filtAtrasados.length > 0 && (
+              <div style={{ background: "white", border: "1px solid #FDE68A", borderRadius: 10, overflow: "hidden", marginBottom: 16 }}>
+                <div style={{ padding: "12px 18px", background: "#FFFBEB", borderBottom: "1px solid #FDE68A", display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 16 }}>🟡</span>
+                  <span style={{ fontSize: 14, fontWeight: 800, color: "#B45309" }}>Atrasados</span>
+                  <span style={{ fontSize: 12, color: "#92400E" }}>— Prazo expirado e Em Andamento ({filtAtrasados.length})</span>
+                </div>
                 <div>
-                  <div style={{ fontSize: 12.5, color: "#222" }}>{m.descricao}</div>
-                  <div style={{ fontSize: 11, color: "#888", marginTop: 2 }}>{m.eixoNome} → {m.diretrizNome}</div>
+                  {filtAtrasados.map((m, i) => (
+                    <div key={m.id} style={{ display: "grid", gridTemplateColumns: "1fr 140px 90px 90px", padding: "10px 18px", borderBottom: i < filtAtrasados.length - 1 ? "1px solid #f5f5f5" : "none", alignItems: "center" }}>
+                      <div>
+                        <div style={{ fontSize: 12.5, color: "#222" }}>{m.descricao}</div>
+                        <div style={{ fontSize: 11, color: "#888", marginTop: 2 }}>{m.eixoNome} → {m.diretrizNome}</div>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
+                        {m.areasResolvidas.map(a => <span key={a} style={{ fontSize: 10, background: "#f0f4ff", color: "#1F3D7A", padding: "1px 6px", borderRadius: 4, fontWeight: 600 }}>{a}</span>)}
+                      </div>
+                      <div style={{ fontSize: 12, color: "#888" }}>{m.prazoEfetivo}</div>
+                      <div><span style={{ fontSize: 11, fontWeight: 700, color: "#B45309", background: "#FEF3C7", padding: "2px 8px", borderRadius: 99 }}>{m.mesesAtraso} {m.mesesAtraso === 1 ? "mês" : "meses"}</span></div>
+                    </div>
+                  ))}
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
-                  {m.areasResolvidas.map(a => <span key={a} style={{ fontSize: 10, background: "#f0f4ff", color: "#1F3D7A", padding: "1px 6px", borderRadius: 4, fontWeight: 600 }}>{a}</span>)}
-                </div>
-                <div style={{ fontSize: 12, color: "#888" }}>{m.prazoEfetivo}</div>
-                <div><span style={{ fontSize: 11, fontWeight: 700, color: "#B45309", background: "#FEF3C7", padding: "2px 8px", borderRadius: 99 }}>{m.mesesAtraso} {m.mesesAtraso === 1 ? "mês" : "meses"}</span></div>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
+            )}
 
-      {filtCriticos.length === 0 && filtAtrasados.length === 0 && (
-        <div style={{ background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 10, padding: "20px 18px", textAlign: "center" }}>
-          <span style={{ fontSize: 14, color: "#16A34A", fontWeight: 600 }}>
-            {filAlertArea ? `Nenhum marco atrasado para ${filAlertArea}` : "Nenhum marco atrasado no momento"}
-          </span>
-        </div>
-      )}
+            {filtCriticos.length === 0 && filtAtrasados.length === 0 && (
+              <div style={{ background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 10, padding: "20px 18px", textAlign: "center" }}>
+                <span style={{ fontSize: 14, color: "#16A34A", fontWeight: 600 }}>
+                  {filAlertArea ? `Nenhum marco atrasado para ${filAlertArea}` : "Nenhum marco atrasado no momento"}
+                </span>
+              </div>
+            )}
           </>
         );
       })()}
@@ -1698,13 +1738,15 @@ export default function App() {
     const newId = `custom_${Date.now()}`;
     setEixosData(prev => prev.map(e => {
       if (e.id !== eixoId) return e;
-      return { ...e, diretrizes: e.diretrizes.map(d => {
-        if (d.id !== diretrizId) return d;
-        const maxOrdem = d.marcos.reduce((max, m) => Math.max(max, m.ordem), 0);
-        const newOrdem = maxOrdem + 1;
-        saveCustomMarcoDB({ id: newId, eixo_id: eixoId, diretriz_id: diretrizId, descricao, responsavel, prazo_original: prazo, ordem: newOrdem });
-        return { ...d, marcos: [...d.marcos, { id: newId, ordem: newOrdem, descricao, responsavel, prazoOriginal: prazo }] };
-      })};
+      return {
+        ...e, diretrizes: e.diretrizes.map(d => {
+          if (d.id !== diretrizId) return d;
+          const maxOrdem = d.marcos.reduce((max, m) => Math.max(max, m.ordem), 0);
+          const newOrdem = maxOrdem + 1;
+          saveCustomMarcoDB({ id: newId, eixo_id: eixoId, diretriz_id: diretrizId, descricao, responsavel, prazo_original: prazo, ordem: newOrdem });
+          return { ...d, marcos: [...d.marcos, { id: newId, ordem: newOrdem, descricao, responsavel, prazoOriginal: prazo }] };
+        })
+      };
     }));
     setNewIds(prev => new Set([...prev, newId]));
   }
@@ -1778,12 +1820,12 @@ export default function App() {
             const parsed = parsePrazo(prazoEfetivo);
             const marcoAreas = (marcoState[m.id] || {}).areas !== undefined
               ? (marcoState[m.id] || {}).areas
-              : (function() {
-                  const raw = m.responsavel;
-                  if (!raw) return [];
-                  if (Array.isArray(raw)) return raw;
-                  return raw.split(/\s+e\s+|\s*\+\s*|\s*,\s*/).map(s => s.trim()).filter(Boolean);
-                })();
+              : (function () {
+                const raw = m.responsavel;
+                if (!raw) return [];
+                if (Array.isArray(raw)) return raw;
+                return raw.split(/\s+e\s+|\s*\+\s*|\s*,\s*/).map(s => s.trim()).filter(Boolean);
+              })();
             if (filStatus.length && !filStatus.includes(st)) return false;
             if (filArea.length && !filArea.some(a => marcoAreas.includes(a))) return false;
             if (filAno.length && (!parsed || !filAno.includes(String(parsed.ano)))) return false;
@@ -1802,8 +1844,8 @@ export default function App() {
   const statusOpts = STATUS_OPTIONS.map(s => ({ value: s.value, label: s.label }));
   const eixoOpts = EIXOS.map(e => ({ value: e.id, label: e.nome }));
   const areaOpts = AREAS_FIXAS.map(a => ({ value: a, label: a }));
-  const anoOpts = ["2025","2026","2027","2028","2029","2030"].map(a => ({ value: a, label: a }));
-  const mesOpts = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"].map((m, i) => ({ value: String(i+1), label: m }));
+  const anoOpts = ["2025", "2026", "2027", "2028", "2029", "2030"].map(a => ({ value: a, label: a }));
+  const mesOpts = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"].map((m, i) => ({ value: String(i + 1), label: m }));
   const origemOpts = [{ value: "planejado", label: "Planejado" }, { value: "adicionado", label: "Adicionado" }];
   const statusColorMap = Object.fromEntries(STATUS_OPTIONS.map(s => [s.value, s.cor]));
   const eixoColorMap = Object.fromEntries(EIXOS.map(e => [e.id, e.cor]));

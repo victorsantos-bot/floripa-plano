@@ -506,31 +506,10 @@ function AreaSelector({ value, onChange, cor }) {
   );
 }
 
-// ── Add Marco Modal ────────────────────────────────────────────────────────────
 // ── Delete Confirm Modal ────────────────────────────────────────────────────────
 function DeleteConfirmModal({ onConfirm, onClose }) {
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(12,35,64,0.45)", zIndex: 3000, display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)" }}>
-      <div style={{ background: "white", borderRadius: 12, padding: 28, width: 400, maxWidth: "90vw", boxShadow: "0 20px 60px rgba(0,0,0,0.2)", textAlign: "center" }}>
-        <div style={{ fontSize: 40, marginBottom: 14 }}>⚠️</div>
-        <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#1F3D7A" }}>Excluir Marco de Entrega</h3>
-        <p style={{ margin: "10px 0 20px", fontSize: 13, color: "#666", lineHeight: 1.5 }}>
-          Tem certeza de que deseja excluir este marco? Esta ação não poderá ser desfeita e removerá o marco permanentemente do sistema.
-        </p>
-        <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
-          <button onClick={onClose} style={{ padding: "8px 18px", border: "1px solid #e5e7eb", borderRadius: 7, background: "white", cursor: "pointer", fontSize: 13, fontWeight: 600 }}>Cancelar</button>
-          <button onClick={onConfirm} style={{ padding: "8px 18px", border: "none", borderRadius: 7, background: "#EF4444", color: "white", cursor: "pointer", fontSize: 13, fontWeight: 600 }}>Confirmar Exclusão</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ── Add Marco Modal ────────────────────────────────────────────────────────────
-// ── Delete Confirm Modal ──────────────────────────────────────────────────────
-function DeleteConfirmModal({ onConfirm, onClose }) {
-  return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.50)", zIndex: 1100, display: "flex", alignItems: "center", justifyContent: "center" }}>
       <div style={{ background: "white", borderRadius: 14, padding: "32px 28px", width: 420, maxWidth: "90vw", boxShadow: "0 24px 60px rgba(0,0,0,0.22)", textAlign: "center" }}>
         <div style={{ fontSize: 40, marginBottom: 14 }}>🗑️</div>
         <h2 style={{ margin: "0 0 10px", fontSize: 18, fontWeight: 800, color: "#0C2340" }}>Excluir Marco</h2>
@@ -538,16 +517,16 @@ function DeleteConfirmModal({ onConfirm, onClose }) {
           Tem certeza que deseja excluir este marco?<br />
           <strong style={{ color: "#DC2626" }}>Esta ação não pode ser desfeita.</strong>
         </p>
-        <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
+        <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
           <button
             onClick={onClose}
-            style={{ padding: "10px 24px", border: "1.5px solid #e5e7eb", borderRadius: 8, background: "white", fontSize: 14, fontWeight: 600, cursor: "pointer", color: "#555" }}
+            style={{ padding: "10px 24px", border: "1.5px solid #e5e7eb", borderRadius: 8, background: "white", fontSize: 14, fontWeight: 600, cursor: "pointer", color: "#555", transition: "all 0.2s" }}
           >
             Cancelar
           </button>
           <button
             onClick={onConfirm}
-            style={{ padding: "10px 24px", border: "none", borderRadius: 8, background: "#DC2626", color: "white", fontSize: 14, fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 8px rgba(220,38,38,0.25)" }}
+            style={{ padding: "10px 24px", border: "none", borderRadius: 8, background: "#DC2626", color: "white", fontSize: 14, fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 8px rgba(220,38,38,0.25)", transition: "all 0.2s" }}
           >
             Sim, excluir
           </button>

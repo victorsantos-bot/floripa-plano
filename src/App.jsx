@@ -507,12 +507,60 @@ function AreaSelector({ value, onChange, cor }) {
 }
 
 // ── Add Marco Modal ────────────────────────────────────────────────────────────
-function AddMarcoModal({ eixos, onAdd, onClose }) {
-  const [eixoId, setEixoId] = useState(eixos[0].id);
-  const [diretrizId, setDiretrizId] = useState(eixos[0].diretrizes[0].id);
-  const [descricao, setDescricao] = useState("");
-  const [areas, setAreas] = useState([]);
-  const [prazo, setPrazo] = useState("");
+// ── Delete Confirm Modal ────────────────────────────────────────────────────────
+function DeleteConfirmModal({ onConfirm, onClose }) {
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(12,35,64,0.45)", zIndex: 3000, display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)" }}>
+      <div style={{ background: "white", borderRadius: 12, padding: 28, width: 400, maxWidth: "90vw", boxShadow: "0 20px 60px rgba(0,0,0,0.2)", textAlign: "center" }}>
+        <div style={{ fontSize: 40, marginBottom: 14 }}>⚠️</div>
+        <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#1F3D7A" }}>Excluir Marco de Entrega</h3>
+        <p style={{ margin: "10px 0 20px", fontSize: 13, color: "#666", lineHeight: 1.5 }}>
+          Tem certeza de que deseja excluir este marco? Esta ação não poderá ser desfeita e removerá o marco permanentemente do sistema.
+        </p>
+        <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
+          <button onClick={onClose} style={{ padding: "8px 18px", border: "1px solid #e5e7eb", borderRadius: 7, background: "white", cursor: "pointer", fontSize: 13, fontWeight: 600 }}>Cancelar</button>
+          <button onClick={onConfirm} style={{ padding: "8px 18px", border: "none", borderRadius: 7, background: "#EF4444", color: "white", cursor: "pointer", fontSize: 13, fontWeight: 600 }}>Confirmar Exclusão</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Add Marco Modal ────────────────────────────────────────────────────────────
+function AddMarcoModal({ eixos, onAdd, onClose, editingMarco }) {
+  const initialEixoId = useMemo(() => {
+    if (!editingMarco) return eixos[0].id;
+    for (const e of eixos) {
+      for (const d of e.diretrizes) {
+        if (d.marcos.some(m => m.id === editingMarco.id)) {
+          return e.id;
+        }
+      }
+    }
+    return eixos[0].id;
+  }, [editingMarco, eixos]);
+
+  const initialDiretrizId = useMemo(() => {
+    if (!editingMarco) return eixos[0].diretrizes[0].id;
+    for (const e of eixos) {
+      for (const d of e.diretrizes) {
+        if (d.marcos.some(m => m.id === editingMarco.id)) {
+          return d.id;
+        }
+      }
+    }
+    return eixos[0].diretrizes[0].id;
+  }, [editingMarco, eixos]);
+
+  const [eixoId, setEixoId] = useState(initialEixoId);
+  const [diretrizId, setDiretrizId] = useState(initialDiretrizId);
+  const [descricao, setDescricao] = useState(editingMarco ? editingMarco.descricao : "");
+  const [areas, setAreas] = useState(() => {
+    if (!editingMarco) return [];
+    if (Array.isArray(editingMarco.responsavel)) return editingMarco.responsavel;
+    return [];
+  });
+  const [prazo, setPrazo] = useState(editingMarco ? editingMarco.prazoOriginal : "");
 
   const eixoSel = eixos.find(e => e.id === eixoId);
   const diretrizes = eixoSel ? eixoSel.diretrizes : [];
@@ -536,7 +584,9 @@ function AddMarcoModal({ eixos, onAdd, onClose }) {
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center" }}>
       <div style={{ background: "white", borderRadius: 12, padding: 28, width: 520, maxWidth: "90vw", boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-          <h2 style={{ margin: 0, fontSize: 17, fontWeight: 700 }}>Novo Marco de Entrega</h2>
+          <h2 style={{ margin: 0, fontSize: 17, fontWeight: 700 }}>
+            {editingMarco ? "Editar Marco de Entrega" : "Novo Marco de Entrega"}
+          </h2>
           <button onClick={onClose} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#888", lineHeight: 1 }}>×</button>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -580,7 +630,7 @@ function AddMarcoModal({ eixos, onAdd, onClose }) {
           <button onClick={onClose} style={{ padding: "8px 18px", border: "1px solid #e5e7eb", borderRadius: 7, background: "white", cursor: "pointer", fontSize: 13 }}>Cancelar</button>
           <button onClick={handleSubmit} disabled={!descricao.trim() || !prazo.trim()}
             style={{ padding: "8px 20px", border: "none", borderRadius: 7, background: descricao.trim() && prazo.trim() ? "#1F3D7A" : "#ccc", color: "white", cursor: descricao.trim() && prazo.trim() ? "pointer" : "not-allowed", fontSize: 13, fontWeight: 600 }}>
-            Adicionar Marco
+            {editingMarco ? "Salvar Alterações" : "Adicionar Marco"}
           </button>
         </div>
       </div>
@@ -597,7 +647,7 @@ function MarcoRow({ marco, marcoState, onUpdate, eixoCor, isNew, isAdmin }) {
     if (Array.isArray(raw)) return raw;
     return raw.split(/\s+e\s+|\s*\+\s*|\s*,\s*/).map(s => s.trim()).filter(Boolean);
   }
-  const areas = marcoState.areas !== undefined ? marcoState.areas : parseAreas(marco.responsavel);
+  const areas = marcoState.areas != null ? marcoState.areas : parseAreas(marco.responsavel);
 
   const [editingPrazo, setEditingPrazo] = useState(false);
   const prazoAjustado = marcoState.prazo !== undefined ? marcoState.prazo : "";

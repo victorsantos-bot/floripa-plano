@@ -527,6 +527,36 @@ function DeleteConfirmModal({ onConfirm, onClose }) {
 }
 
 // ── Add Marco Modal ────────────────────────────────────────────────────────────
+// ── Delete Confirm Modal ──────────────────────────────────────────────────────
+function DeleteConfirmModal({ onConfirm, onClose }) {
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.50)", zIndex: 1100, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ background: "white", borderRadius: 14, padding: "32px 28px", width: 420, maxWidth: "90vw", boxShadow: "0 24px 60px rgba(0,0,0,0.22)", textAlign: "center" }}>
+        <div style={{ fontSize: 40, marginBottom: 14 }}>🗑️</div>
+        <h2 style={{ margin: "0 0 10px", fontSize: 18, fontWeight: 800, color: "#0C2340" }}>Excluir Marco</h2>
+        <p style={{ margin: "0 0 24px", fontSize: 14, color: "#666", lineHeight: 1.55 }}>
+          Tem certeza que deseja excluir este marco?<br />
+          <strong style={{ color: "#DC2626" }}>Esta ação não pode ser desfeita.</strong>
+        </p>
+        <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
+          <button
+            onClick={onClose}
+            style={{ padding: "10px 24px", border: "1.5px solid #e5e7eb", borderRadius: 8, background: "white", fontSize: 14, fontWeight: 600, cursor: "pointer", color: "#555" }}
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={onConfirm}
+            style={{ padding: "10px 24px", border: "none", borderRadius: 8, background: "#DC2626", color: "white", fontSize: 14, fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 8px rgba(220,38,38,0.25)" }}
+          >
+            Sim, excluir
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function AddMarcoModal({ eixos, onAdd, onClose, editingMarco }) {
   const initialEixoId = useMemo(() => {
     if (!editingMarco) return eixos[0].id;
@@ -639,7 +669,7 @@ function AddMarcoModal({ eixos, onAdd, onClose, editingMarco }) {
 }
 
 // ── Marco Row ─────────────────────────────────────────────────────────────────
-function MarcoRow({ marco, marcoState, onUpdate, eixoCor, isNew, isAdmin }) {
+function MarcoRow({ marco, marcoState, onUpdate, eixoCor, isNew, isAdmin, onEdit, onDelete }) {
   const status = marcoState.status || "nao-iniciado";
   // Areas: stored in marcoState.areas; fallback to marco.responsavel parsed into individual areas
   function parseAreas(raw) {
@@ -679,11 +709,25 @@ function MarcoRow({ marco, marcoState, onUpdate, eixoCor, isNew, isAdmin }) {
         <div style={{ display: "flex", alignItems: "flex-start", gap: 6 }}>
           <span style={{ fontSize: 12.5, color: "#1a1a1a", lineHeight: 1.45 }}>{marco.descricao}</span>
         </div>
-        <div style={{ marginTop: 3 }}>
+        <div style={{ marginTop: 4, display: "flex", alignItems: "center", gap: 5, flexWrap: "wrap" }}>
           {marco.id.startsWith("custom_")
             ? <span style={{ fontSize: 9, background: "#DBEAFE", color: "#2563EB", padding: "1px 6px", borderRadius: 99, fontWeight: 700 }}>Adicionado</span>
             : <span style={{ fontSize: 9, background: "#F3F4F6", color: "#6B7280", padding: "1px 6px", borderRadius: 99, fontWeight: 600 }}>Planejado</span>
           }
+          {marco.id.startsWith("custom_") && isAdmin && (
+            <>
+              <button
+                onClick={() => onEdit && onEdit(marco)}
+                title="Editar marco"
+                style={{ fontSize: 9, padding: "1px 7px", borderRadius: 99, border: "1px solid #93C5FD", background: "#EFF6FF", color: "#2563EB", cursor: "pointer", fontWeight: 700, lineHeight: 1.6 }}
+              >✎ Editar</button>
+              <button
+                onClick={() => onDelete && onDelete(marco)}
+                title="Excluir marco"
+                style={{ fontSize: 9, padding: "1px 7px", borderRadius: 99, border: "1px solid #FCA5A5", background: "#FEF2F2", color: "#DC2626", cursor: "pointer", fontWeight: 700, lineHeight: 1.6 }}
+              >✕ Excluir</button>
+            </>
+          )}
         </div>
       </div>
       {/* Área responsável */}
@@ -743,7 +787,7 @@ function MarcoRow({ marco, marcoState, onUpdate, eixoCor, isNew, isAdmin }) {
 }
 
 // ── Diretriz Card ─────────────────────────────────────────────────────────────
-function DiretrizCard({ diretriz, state, onUpdate, eixoCor, eixoCorClaro, newIds, isAdmin }) {
+function DiretrizCard({ diretriz, state, onUpdate, eixoCor, eixoCorClaro, newIds, isAdmin, onEdit, onDelete }) {
   const [expanded, setExpanded] = useState(true);
 
   const counts = useMemo(() => {
@@ -800,7 +844,7 @@ function DiretrizCard({ diretriz, state, onUpdate, eixoCor, eixoCorClaro, newIds
             <div style={{ padding: "5px 10px 5px 0", fontSize: 10, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: "0.05em" }}>Observações</div>
           </div>
           {diretriz.marcos.map(marco => (
-            <MarcoRow key={marco.id} marco={marco} marcoState={state[marco.id] || {}} onUpdate={onUpdate} eixoCor={eixoCor} isNew={newIds && newIds.has(marco.id)} isAdmin={isAdmin} />
+            <MarcoRow key={marco.id} marco={marco} marcoState={state[marco.id] || {}} onUpdate={onUpdate} eixoCor={eixoCor} isNew={newIds && newIds.has(marco.id)} isAdmin={isAdmin} onEdit={onEdit} onDelete={onDelete} />
           ))}
         </div>
       )}
@@ -809,7 +853,7 @@ function DiretrizCard({ diretriz, state, onUpdate, eixoCor, eixoCorClaro, newIds
 }
 
 // ── Eixo Section ──────────────────────────────────────────────────────────────
-function EixoSection({ eixo, state, onUpdate, newIds, isAdmin }) {
+function EixoSection({ eixo, state, onUpdate, newIds, isAdmin, onEdit, onDelete }) {
   const [expanded, setExpanded] = useState(true);
   const totalMarcos = eixo.diretrizes.reduce((a, d) => a + d.marcos.length, 0);
   const concluidos = eixo.diretrizes.reduce((a, d) => a + d.marcos.filter(m => (state[m.id] || {}).status === "concluido").length, 0);
@@ -831,7 +875,7 @@ function EixoSection({ eixo, state, onUpdate, newIds, isAdmin }) {
       {expanded && (
         <div style={{ border: `1px solid ${eixo.cor}44`, borderTop: "none", borderRadius: "0 0 9px 9px", padding: "14px 14px 6px" }}>
           {eixo.diretrizes.map(d => (
-            <DiretrizCard key={d.id} diretriz={d} state={state} onUpdate={onUpdate} eixoCor={eixo.cor} eixoCorClaro={eixo.corClaro} newIds={newIds} isAdmin={isAdmin} />
+            <DiretrizCard key={d.id} diretriz={d} state={state} onUpdate={onUpdate} eixoCor={eixo.cor} eixoCorClaro={eixo.corClaro} newIds={newIds} isAdmin={isAdmin} onEdit={onEdit} onDelete={onDelete} />
           ))}
         </div>
       )}
@@ -1636,6 +1680,8 @@ export default function App() {
   const [search, setSearch] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [newIds, setNewIds] = useState(new Set());
+  const [deletingMarco, setDeletingMarco] = useState(null);  // marco object being deleted
+  const [editingMarco, setEditingMarco] = useState(null);    // marco object being edited
 
   // Saves happen per-update via Supabase functions below
 
@@ -1661,6 +1707,60 @@ export default function App() {
       })};
     }));
     setNewIds(prev => new Set([...prev, newId]));
+  }
+
+  async function handleDeleteMarco(marco) {
+    // Remove from Supabase
+    await supabase.from("marcos_custom").delete().eq("id", marco.id);
+    await supabase.from("marcos_state").delete().eq("id", marco.id);
+    // Remove from local state
+    setEixosData(prev => prev.map(e => ({
+      ...e,
+      diretrizes: e.diretrizes.map(d => ({
+        ...d,
+        marcos: d.marcos.filter(m => m.id !== marco.id)
+      }))
+    })));
+    setMarcoState(prev => {
+      const next = { ...prev };
+      delete next[marco.id];
+      return next;
+    });
+    setNewIds(prev => { const next = new Set(prev); next.delete(marco.id); return next; });
+    setDeletingMarco(null);
+  }
+
+  async function handleEditMarco({ eixoId, diretrizId, descricao, responsavel, prazo }) {
+    if (!editingMarco) return;
+    const id = editingMarco.id;
+    // Find original eixo/diretriz location
+    let origEixoId = null, origDiretrizId = null;
+    eixosData.forEach(e => e.diretrizes.forEach(d => { if (d.marcos.some(m => m.id === id)) { origEixoId = e.id; origDiretrizId = d.id; } }));
+    // Persist to Supabase
+    await supabase.from("marcos_custom").update({ eixo_id: eixoId, diretriz_id: diretrizId, descricao, responsavel, prazo_original: prazo }).eq("id", id);
+    // Update local eixosData (handle possible eixo/diretriz change)
+    setEixosData(prev => {
+      let updated = prev.map(e => ({
+        ...e,
+        diretrizes: e.diretrizes.map(d => ({
+          ...d,
+          marcos: d.marcos.filter(m => m.id !== id)
+        }))
+      }));
+      updated = updated.map(e => {
+        if (e.id !== eixoId) return e;
+        return {
+          ...e,
+          diretrizes: e.diretrizes.map(d => {
+            if (d.id !== diretrizId) return d;
+            const ordem = editingMarco.ordem;
+            return { ...d, marcos: [...d.marcos, { id, ordem, descricao, responsavel, prazoOriginal: prazo }] };
+          })
+        };
+      });
+      return updated;
+    });
+    setEditingMarco(null);
   }
 
   const hasFilter = filStatus.length || filEixo.length || filArea.length || filAno.length || filMes.length || filOrigem.length || search;
@@ -1726,6 +1826,8 @@ export default function App() {
         </div>
       )}
       {showAddModal && <AddMarcoModal eixos={eixosData} onAdd={handleAddMarco} onClose={() => setShowAddModal(false)} />}
+      {editingMarco && <AddMarcoModal eixos={eixosData} editingMarco={editingMarco} onAdd={handleEditMarco} onClose={() => setEditingMarco(null)} />}
+      {deletingMarco && <DeleteConfirmModal onConfirm={() => handleDeleteMarco(deletingMarco)} onClose={() => setDeletingMarco(null)} />}
 
       {/* ── Header Institucional ── */}
       <div style={{ background: "linear-gradient(135deg, #0C2340 0%, #1A4175 50%, #1F5C99 100%)", padding: "0 24px" }}>
@@ -1826,7 +1928,7 @@ export default function App() {
             </div>
             {filteredEixos.length === 0
               ? <div style={{ textAlign: "center", padding: 60, color: "#aaa", fontSize: 15 }}>Nenhum marco encontrado com os filtros selecionados.</div>
-              : filteredEixos.map(eixo => <EixoSection key={eixo.id} eixo={eixo} state={marcoState} onUpdate={handleUpdate} newIds={newIds} isAdmin={isAdmin} />)
+              : filteredEixos.map(eixo => <EixoSection key={eixo.id} eixo={eixo} state={marcoState} onUpdate={handleUpdate} newIds={newIds} isAdmin={isAdmin} onEdit={setEditingMarco} onDelete={setDeletingMarco} />)
             }
           </>
         )}

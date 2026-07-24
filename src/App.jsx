@@ -1047,7 +1047,7 @@ function calcMcAtingimento(mc, resultado) {
     if (val <= 0) return null;
     return Math.min(100, Math.round((mc.objetivo / val) * 100));
   }
-  return Math.round((val / mc.objetivo) * 100);
+  return Math.min(100, Math.round((val / mc.objetivo) * 100));
 }
 
 function classifyMc(pct) {
@@ -1370,7 +1370,7 @@ function MonitoramentoTab({ eixosData, marcoState, indState }) {
           if (!val || val.resultado === null || val.resultado === undefined || val.resultado === "") return;
           const resultado = parseFloat(val.resultado);
           if (isNaN(resultado)) return;
-          const pct = Math.round((resultado / meta) * 100);
+          const pct = Math.min(100, Math.round((resultado / meta) * 100));
           if (map[ano][dir.eixoId]) {
             map[ano][dir.eixoId].sum += pct;
             map[ano][dir.eixoId].count++;
@@ -1392,7 +1392,7 @@ function MonitoramentoTab({ eixosData, marcoState, indState }) {
 
   const totalIndSum = Object.values(yearInd).reduce((a, e) => a + e.sum, 0);
   const totalIndCount = Object.values(yearInd).reduce((a, e) => a + e.count, 0);
-  const pctAtingimento = totalIndCount > 0 ? Math.round(totalIndSum / totalIndCount) : null;
+  const pctAtingimento = totalIndCount > 0 ? Math.min(100, Math.round(totalIndSum / totalIndCount)) : null;
 
   // ── Alerts: overdue marcos ──
   const alertas = useMemo(() => {
@@ -1519,7 +1519,7 @@ function MonitoramentoTab({ eixosData, marcoState, indState }) {
               const em = yearMarcos[eixo.id] || { total: 0, concluidos: 0, inviabilizados: 0 };
               const ei = yearInd[eixo.id] || { sum: 0, count: 0 };
               const ePctConc = (em.total - em.inviabilizados) > 0 ? Math.round((em.concluidos / (em.total - em.inviabilizados)) * 100) : 0;
-              const ePctInd = ei.count > 0 ? Math.round(ei.sum / ei.count) : null;
+              const ePctInd = ei.count > 0 ? Math.min(100, Math.round(ei.sum / ei.count)) : null;
               return (
                 <tr key={eixo.id} style={{ borderBottom: "1px solid #f0f0f0" }}>
                   <td style={{ padding: "12px 16px" }}>
@@ -1661,8 +1661,13 @@ export default function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // ── Load all data from Supabase on mount ──
+  // ── Load all data from Supabase on mount and auth change ──
   useEffect(() => {
+    if (isAdmin === null) return;
+    setDataLoaded(false);
+    setMarcoState({});
+    setIndState({});
+    setEixosData(EIXOS);
     async function loadAll() {
       const [marcos, indicadores, customMarcos] = await Promise.all([
         loadMarcosFromDB(),
@@ -1673,8 +1678,8 @@ export default function App() {
       setIndState(indicadores);
       // Merge custom marcos into eixosData
       if (customMarcos.length > 0) {
-        setEixosData(prev => {
-          let updated = prev.map(e => ({ ...e, diretrizes: e.diretrizes.map(d => ({ ...d, marcos: [...d.marcos] })) }));
+        setEixosData(() => {
+          let updated = EIXOS.map(e => ({ ...e, diretrizes: e.diretrizes.map(d => ({ ...d, marcos: [...d.marcos] })) }));
           customMarcos.forEach(cm => {
             const eixo = updated.find(e => e.id === cm.eixo_id);
             if (!eixo) return;
@@ -1689,7 +1694,7 @@ export default function App() {
       setDataLoaded(true);
     }
     loadAll();
-  }, []);
+  }, [isAdmin]);
   const [filStatus, setFilStatus] = useState([]);
   const [filEixo, setFilEixo] = useState([]);
   const [filArea, setFilArea] = useState([]);

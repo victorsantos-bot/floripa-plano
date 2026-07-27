@@ -1329,7 +1329,7 @@ function MonitoramentoTab({ eixosData, marcoState, indState }) {
           const ms = marcoState[m.id] || {};
           const prazoEfetivo = ms.prazo && ms.prazo !== "" ? ms.prazo : m.prazoOriginal;
           const parsed = prazoEfetivo === "OK" ? { mes: 1, ano: 2025 } : parsePrazo(prazoEfetivo);
-          const areasResolvidas = ms.areas !== undefined ? ms.areas : parseAreasLocal(m.responsavel);
+          const areasResolvidas = ms.areas != null ? ms.areas : parseAreasLocal(m.responsavel);
           result.push({
             ...m, eixoId: eixo.id, eixoNome: eixo.nome, eixoCor: eixo.cor,
             diretrizNome: dir.nome, status: ms.status || "nao-iniciado",
@@ -1802,7 +1802,7 @@ export default function App() {
             const st = (marcoState[m.id] || {}).status || "nao-iniciado";
             const prazoEfetivo = (marcoState[m.id] || {}).prazo !== undefined ? (marcoState[m.id] || {}).prazo : m.prazoOriginal;
             const parsed = parsePrazo(prazoEfetivo);
-            const marcoAreas = (marcoState[m.id] || {}).areas !== undefined
+            const marcoAreas = (marcoState[m.id] || {}).areas != null
               ? (marcoState[m.id] || {}).areas
               : (function () {
                 const raw = m.responsavel;

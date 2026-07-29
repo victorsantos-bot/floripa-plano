@@ -1647,14 +1647,26 @@ export default function App() {
   const [indState, setIndState] = useState({});
   const [dataLoaded, setDataLoaded] = useState(false);
 
+  const [userArea, setUserArea] = useState(null);
+
   // ── Check existing session on mount ──
   useEffect(() => {
     const checkRole = (session) => {
-      if (!session) return null;
+      if (!session) {
+        setUserArea(null);
+        return null;
+      }
       const email = session.user?.email?.toLowerCase() || "";
-      // Define os e-mails de admin (ou checa padrão do e-mail)
-      const isViewer = ["def@", "dei@", "diped@", "dgpe@", "gabinete@", "diaop@", "gfc@"].some(area => email.startsWith(area));
-      return isViewer ? false : true; // false = viewer, true = admin
+      const matchedPrefix = ["def@", "dei@", "diped@", "dgpe@", "gabinete@", "diaop@", "gfc@"].find(area => email.startsWith(area));
+      
+      if (matchedPrefix) {
+        const areaName = matchedPrefix.replace("@", "");
+        const realArea = AREAS_FIXAS.find(a => a.toLowerCase() === areaName);
+        if (realArea) setUserArea(realArea);
+        return false; // viewer
+      }
+      setUserArea(null);
+      return true; // admin
     };
 
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -1703,6 +1715,15 @@ export default function App() {
   const [filStatus, setFilStatus] = useState([]);
   const [filEixo, setFilEixo] = useState([]);
   const [filArea, setFilArea] = useState([]);
+
+  // Pré-seleciona o filtro da área responsável se a área do usuário for detectada
+  useEffect(() => {
+    if (userArea) {
+      setFilArea([userArea]);
+    } else {
+      setFilArea([]);
+    }
+  }, [userArea]);
   const [filAno, setFilAno] = useState([]);
   const [filMes, setFilMes] = useState([]);
   const [filOrigem, setFilOrigem] = useState([]);

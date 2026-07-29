@@ -44,10 +44,7 @@ function LoginModal({ onLogin }) {
           />
           {error && <div style={{ fontSize: 12, color: "#DC2626", marginTop: 6 }}>{error}</div>}
           <button onClick={handleSubmit} disabled={loading} style={{ width: "100%", marginTop: 14, padding: "11px 0", background: "#0C2340", color: "white", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: loading ? "wait" : "pointer", opacity: loading ? 0.7 : 1 }}>
-            {loading ? "Entrando..." : "Entrar como Admin"}
-          </button>
-          <button onClick={() => onLogin(false)} style={{ width: "100%", marginTop: 8, padding: "10px 0", background: "transparent", color: "#888", border: "1px solid #e5e7eb", borderRadius: 8, fontSize: 13, cursor: "pointer" }}>
-            Continuar apenas visualizando
+            {loading ? "Entrando..." : "Entrar"}
           </button>
         </div>
       </div>
@@ -1652,11 +1649,19 @@ export default function App() {
 
   // ── Check existing session on mount ──
   useEffect(() => {
+    const checkRole = (session) => {
+      if (!session) return null;
+      const email = session.user?.email?.toLowerCase() || "";
+      // Define os e-mails de admin (ou checa padrão do e-mail)
+      const isViewer = ["def@", "dei@", "diped@", "dgpe@", "gabinete@", "diaop@", "gfc@"].some(area => email.startsWith(area));
+      return isViewer ? false : true; // false = viewer, true = admin
+    };
+
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsAdmin(session ? true : null);
+      setIsAdmin(checkRole(session));
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) setIsAdmin(prev => prev === true ? false : prev);
+      setIsAdmin(checkRole(session));
     });
     return () => subscription.unsubscribe();
   }, []);
@@ -1873,12 +1878,7 @@ export default function App() {
                   <span style={{ fontSize: 11, padding: "4px 10px", borderRadius: 99, fontWeight: 700, background: isAdmin ? "rgba(22,163,74,0.2)" : "rgba(255,255,255,0.15)", color: isAdmin ? "#86efac" : "rgba(255,255,255,0.6)", border: isAdmin ? "1px solid rgba(22,163,74,0.3)" : "1px solid rgba(255,255,255,0.2)" }}>
                     {isAdmin ? "Admin" : "Visualizador"}
                   </span>
-                  {isAdmin && (
-                    <button onClick={async () => { await supabase.auth.signOut(); setIsAdmin(false); }} style={{ fontSize: 11, padding: "4px 10px", background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 6, cursor: "pointer" }}>Sair</button>
-                  )}
-                  {!isAdmin && (
-                    <button onClick={() => setIsAdmin(null)} style={{ fontSize: 11, padding: "4px 10px", background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 6, cursor: "pointer" }}>Login Admin</button>
-                  )}
+                  <button onClick={async () => { await supabase.auth.signOut(); }} style={{ fontSize: 11, padding: "4px 10px", background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 6, cursor: "pointer" }}>Sair</button>
                 </div>
               )}
               <button onClick={() => window.open("/Plano_Estrategico_Floripa_Mais_Aprendizagem.pdf", "_blank")} style={{ padding: "8px 14px", background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.85)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 7, fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>

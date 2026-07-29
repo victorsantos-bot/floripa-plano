@@ -14,7 +14,7 @@ function LoginModal({ onLogin }) {
     const { error: err } = await supabase.auth.signInWithPassword({ email, password: pw });
     setLoading(false);
     if (err) { setError("Email ou senha incorretos"); return; }
-    onLogin(true);
+    // A role será definida automaticamente pelo listener onAuthStateChange no App
   }
 
   return (
